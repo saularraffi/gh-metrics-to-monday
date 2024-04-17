@@ -24,3 +24,4 @@ jobs:
           numAdditions="$(gh api repos/saularraffi/test/pulls/$PR_NUMBER --jq '.additions')"
           echo $numAdditions
           git clone https://github.com/saularraffi/code-churn-calc.git
+          cd code-churn-calc; python code-churn-calc.py
