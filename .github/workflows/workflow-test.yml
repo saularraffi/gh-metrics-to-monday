@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  label_issue:
+  some-job:
+    runs-on: ubuntu-latest
     steps:
       # - env:
       #     GH_TOKEN: ${{ secrets.MY_TOKEN }}
