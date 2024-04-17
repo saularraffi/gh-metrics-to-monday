@@ -23,4 +23,4 @@ jobs:
         run: |c
           numAdditions="$(gh api repos/saularraffi/test/pulls/$PR_NUMBER --jq '.additions')"
           echo $numAdditions
-          echo "$(gh api repos/saularraffi/test/pulls/16"
+          python -c "print('hello')"
