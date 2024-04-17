@@ -21,5 +21,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.find-pr.outputs.pr }}
         run: |
-          echo token - $GH_TOKEN
-          echo pr - $PR_NUMBER
+          numAdditions="$(gh api repos/$OWNER/$REPO/pulls/$PR_NUMBER --jq '.additions')"
+          echo $numAdditions
