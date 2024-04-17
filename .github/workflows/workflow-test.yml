@@ -20,7 +20,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.find-pr.outputs.pr }}
-        run: |
+        run: |c
           numAdditions="$(gh api repos/saularraffi/test/pulls/$PR_NUMBER --jq '.additions')"
           echo $numAdditions
-          gh pr diff
+          echo "$(gh api repos/saularraffi/test/pulls/16"
