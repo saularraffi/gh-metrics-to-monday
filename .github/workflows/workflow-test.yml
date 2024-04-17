@@ -9,15 +9,12 @@ jobs:
   some-job:
     runs-on: ubuntu-latest
     steps:
-      # - env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     OWNER: ${{ inputs.repo-owner }}
-      #     REPO: ${{ inputs.repo-name }}
-      #     PR_NUMBER: ${{ steps.find-pr.outputs.pr }}
-      #   run: |
-      #     echo $OWNER
-      #     echo $REPO
-      #     echo PR_NUMBER
-      - run: |
-          echo hello
-          echo goodbye
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ inputs.repo-owner }}
+          REPO: ${{ inputs.repo-name }}
+          PR_NUMBER: ${{ steps.find-pr.outputs.pr }}
+        run: |
+          echo $OWNER
+          echo $REPO
+          echo PR_NUMBER
