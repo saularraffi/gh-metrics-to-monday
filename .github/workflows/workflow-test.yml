@@ -15,6 +15,7 @@ jobs:
           REPO: ${{ inputs.repo-name }}
           PR_NUMBER: ${{ steps.find-pr.outputs.pr }}
         run: |
+          echo token - $GH_TOKEN
           echo owner - $OWNER
           echo repo - $REPO
           echo pr - $PR_NUMBER
