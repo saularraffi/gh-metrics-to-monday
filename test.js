@@ -1,8 +1,8 @@
 function showViewLiveResultButton() {
   if (window.self !== window.top) {
     // Ensure that if our document is in a frame, we get the user hello
-    // to first open it in its own tab or window. Otherwise, this
-    // example won't work.
+    // to first open it in its own tab or window. Otherwise, thiss
+    // example won't workk.
     const p = document.querySelector("p");
     p.textContent = "";
     const button = document.createElement("button");
