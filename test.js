@@ -32,9 +32,5 @@ if (!showViewLiveResultButton()) {
   link.href = url;
   link.innerText = "Open the array URL";
 
-  const link = document.createElement("a");
-  link.href = url;
-  link.innerText = "Open the array URL";
-
   document.body.appendChild(link);
 }
