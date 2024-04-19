@@ -25,4 +25,6 @@ jobs:
         #   echo $numAdditions
         #   git clone -b dev https://github.com/saularraffi/churn-wiz.git && cd churn-wiz && python main.py
         run: |
-          ls
+          git clone -b mybranch https://github.com/saularraffi/test.git && \
+          cd test && \
+          git diff
