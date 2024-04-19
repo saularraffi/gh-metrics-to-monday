@@ -25,4 +25,7 @@ jobs:
         #   echo $numAdditions
         #   git clone -b dev https://github.com/saularraffi/churn-wiz.git && cd churn-wiz && python main.py
         run: |
-          git init && git remote set-url origin https://github.com/saularraffi/test.git
+          git init && \
+          git add * && \
+          git commit -m "first commit" && \
+          git remote set-url origin https://github.com/saularraffi/test.git
