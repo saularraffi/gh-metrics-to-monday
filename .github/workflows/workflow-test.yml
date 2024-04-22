@@ -20,11 +20,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.find-pr.outputs.pr }}
-        # run: |
-        #   numAdditions="$(gh api repos/saularraffi/test/pulls/$PR_NUMBER --jq '.additions')"
-        #   echo $numAdditions
-        #   git clone -b dev https://github.com/saularraffi/churn-wiz.git && cd churn-wiz && python main.py
         run: |
-          git clone -b mybranch https://github.com/saularraffi/test.git && \
-          cd test && \
-          git diff
+          numAdditions="$(gh api repos/saularraffi/test/pulls/$PR_NUMBER --jq '.additions')"
+          echo $numAdditions
+          git clone -b dev https://github.com/saularraffi/churn-wiz.git && cd churn-wiz && python main.py
