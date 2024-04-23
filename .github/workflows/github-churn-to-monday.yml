@@ -13,8 +13,6 @@ on:
 jobs:
   main:
     runs-on: ubuntu-latest
-    # outputs:
-    #   output1: ${{ steps.get-total-churn.outputs.test }}
     steps:
       # Find the PR associated with this push, if there is one.
       - name: Get PR number
@@ -24,27 +22,16 @@ jobs:
           state: all
 
       - name: Get Total Churn
-        # id: get-total-churn
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.find-pr.outputs.pr }}
           OWNER: ${{ inputs.repo-owner }}
           REPO: ${{ inputs.repo-name }}
         run: |
-          echo PR Number : $PR_NUMBER
-          echo Owner     : $OWNER
-          echo Repo      : $REPO
           wget https://raw.githubusercontent.com/saularraffi/churn-wiz/main/main.py
           totalChurn="$(python main.py -o $OWNER -r $REPO -pr $PR_NUMBER -gt $GH_TOKEN)"
           echo "TOTAL_CHURN="$totalChurn >> $GITHUB_ENV
 
       - name: Log Results
         run: |
-          echo "Total churn: $TOTAL_CHURN"
-
-  # churn-to-monday:
-  #   runs-on: ubuntu-latest
-  #     steps:
-  #       - name: Log result
-  #         run: |
-  #           echo "Total churn: $TOTAL_CHURN"
+          echo "Total churn: $TOTAL_CHURN lines"
