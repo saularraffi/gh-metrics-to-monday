@@ -23,4 +23,5 @@ jobs:
         run: |
           numAdditions="$(gh api repos/saularraffi/test/pulls/$PR_NUMBER --jq '.additions')"
           echo $numAdditions
-          git clone -b dev https://github.com/saularraffi/churn-wiz.git && cd churn-wiz && python main.py
+          wget https://raw.githubusercontent.com/saularraffi/churn-wiz/main/main.py && \
+          python main.py
