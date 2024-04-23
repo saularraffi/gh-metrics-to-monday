@@ -20,9 +20,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.find-pr.outputs.pr }}
+          OWNER: ${{ inputs.repo-owner }}
+          REPO: ${{ inputs.repo-name }}
         # run: |
         #   wget https://raw.githubusercontent.com/saularraffi/churn-wiz/main/main.py && \
         #   python main.py
         run: |
           echo $GH_TOKEN
           echo $PR_NUMBER
+          echo $OWNER
+          echo $REPO
