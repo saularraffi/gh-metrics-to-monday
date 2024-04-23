@@ -36,7 +36,7 @@ jobs:
           echo Repo      : $REPO
           wget https://raw.githubusercontent.com/saularraffi/churn-wiz/main/main.py
           totalChurn="$(python main.py -o $OWNER -r $REPO -pr $PR_NUMBER -gt $GH_TOKEN)"
-          echo "TOTAL_CHURN="$totalChurn >> "$GITHUB_OUTPUT"
+          echo "TOTAL_CHURN="$totalChurn >> $GITHUB_ENV
 
       - name: Log Results
         run: |
