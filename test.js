@@ -31,3 +31,5 @@ if (!showViewLiveResultButton()) {
 
   document.body.appendChild(link);
 }
+
+// this is a comment
