@@ -20,8 +20,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.find-pr.outputs.pr }}
+        # run: |
+        #   wget https://raw.githubusercontent.com/saularraffi/churn-wiz/main/main.py && \
+        #   python main.py
         run: |
-          numAdditions="$(gh api repos/saularraffi/test/pulls/$PR_NUMBER --jq '.additions')"
-          echo $numAdditions
-          wget https://raw.githubusercontent.com/saularraffi/churn-wiz/main/main.py && \
-          python main.py
+          echo $GH_TOKEN
+          echo $PR_NUMBER
