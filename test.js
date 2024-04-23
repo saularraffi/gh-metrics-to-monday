@@ -3,7 +3,7 @@ function showViewLiveResultButton() {
     // Ensure that if our document is in a frame, we get the user
     // to first open it in its own tab or window. Otherwise, this
     // example won't work.
-    const p = document.querySelector("p");
+    const p = document.querySelector("px");
     p.textContent = "";
     const button = document.createElement("button");
     button.textContent = "View live result of the example code above";
@@ -14,6 +14,10 @@ function showViewLiveResultButton() {
   return false;
 }
 
+// this is a test
+// this is a test
+// this is a test
+
 if (!showViewLiveResultButton()) {
   function typedArrayToURL(typedArray, mimeType) {
     return URL.createObjectURL(
@@ -21,10 +25,6 @@ if (!showViewLiveResultButton()) {
     );
   }
   const bytes = new Uint8Array(59);
-
-  for (let i = 0; i < 59; i++) {
-    bytes[i] = 32 + i;
-  }
 
   const url = typedArrayToURL(bytes, "text/plain");
 
