@@ -31,5 +31,5 @@ jobs:
           echo PR Number : $PR_NUMBER
           echo Owner     : $OWNER
           echo Repo      : $REPO
-          wget https://raw.githubusercontent.com/saularraffi/churn-wiz/main/main.py && \
+          wget https://raw.githubusercontent.com/saularraffi/churn-wiz/main/main.py
           python main.py -o $OWNER -r $REPO -pr $PR_NUMBER -gt $GH_TOKEN
