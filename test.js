@@ -1,6 +1,6 @@
 function showViewLiveResultButton() {
   if (window.self !== window.top) {
-    const p = document.querySelector("px");
+    const p = document.querySelector("p");
     p.textContent = "";
     const button = document.createElement("button");
     button.textContent = "View live result of the example code above";
