@@ -15,8 +15,8 @@ function showViewLiveResultButton() {
 }
 
 // this is a test another test
-// this is a test
-// this is a test
+// this is a test another test
+// this is a test another test
 
 if (!showViewLiveResultButton()) {
   function typedArrayToURL(typedArray, mimeType) {
