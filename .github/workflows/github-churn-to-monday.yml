@@ -5,6 +5,16 @@ on:
     branches:
       - main
 
+on:
+  workflow_call:
+    inputs:
+      repo-owner:
+        required: true
+        type: string
+      repo-name:
+        required: true
+        type: string
+        
 jobs:
   some-job:
     runs-on: ubuntu-latest
