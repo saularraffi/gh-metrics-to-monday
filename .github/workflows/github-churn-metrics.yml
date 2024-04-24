@@ -28,7 +28,7 @@ jobs:
           OWNER: ${{ inputs.repo-owner }}
           REPO: ${{ inputs.repo-name }}
         run: |
-          wget https://raw.githubusercontent.com/saularraffi/gh-metrics-to-monday/main/gh_churn_metrics.py
+          wget https://raw.githubusercontent.com/saularraffi/github-metrics/main/gh_churn_metrics.py
           totalChurn="$(python gh_churn_metrics.py -o $OWNER -r $REPO -pr $PR_NUMBER -gt $GH_TOKEN)"
           echo "TOTAL_CHURN="$totalChurn >> $GITHUB_ENV
 
