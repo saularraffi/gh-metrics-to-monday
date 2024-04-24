@@ -27,9 +27,12 @@ jobs:
           PR_NUMBER: ${{ steps.find-pr.outputs.pr }}
           OWNER: ${{ inputs.repo-owner }}
           REPO: ${{ inputs.repo-name }}
+        # run: |
+        #   wget https://raw.githubusercontent.com/saularraffi/churn-wiz/main/main.py
+        #   totalChurn="$(python main.py -o $OWNER -r $REPO -pr $PR_NUMBER -gt $GH_TOKEN)"
+        #   echo "TOTAL_CHURN="$totalChurn >> $GITHUB_ENV
         run: |
-          wget https://raw.githubusercontent.com/saularraffi/churn-wiz/main/main.py
-          totalChurn="$(python main.py -o $OWNER -r $REPO -pr $PR_NUMBER -gt $GH_TOKEN)"
+          totalChurn="$(python ../gh_churn_metrics.py -o $OWNER -r $REPO -pr $PR_NUMBER -gt $GH_TOKEN)"
           echo "TOTAL_CHURN="$totalChurn >> $GITHUB_ENV
 
       - name: Log Results
