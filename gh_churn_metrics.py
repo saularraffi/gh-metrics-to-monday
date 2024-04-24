@@ -82,6 +82,25 @@ def fetchPrDiffFiles(prNumber):
     
     return { 'data': response.json() }
 
+def fetchRepoContributors():
+    url = f'https://api.github.com/repos/{OWNER}/{REPO}/contributors'
+    headers = {
+        'Authorization': REQUEST_HEADERS['Authorization'],
+        'Accept': 'application/vnd.github.v3+json'
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code != 200:
+        return { 'error': f'{response.status_code} - {response.text}' }
+    
+    contributors = []
+
+    for contributor in response.json():
+        contributors.append(contributor['login'])
+        
+    return contributors
+    
 def splitHunks(patch):
     pattern = r"(@@ [^@]+ @@)"
     splitResult = re.split(pattern, patch)
@@ -161,12 +180,23 @@ def getDaysOld(dateStr):
     date = dateTimeObj.date()
     return (now - date).days
 
+def getChangeHistoryForAllContributors(filename):
+    contributors = fetchRepoContributors()
+
+    totalCommitHistory = []
+
+    for contributor in contributors:
+        query = getFileCommitHistoryQuery(filename)
+        commitHistory = fetchFileCommitHistory(query)
+        totalCommitHistory += commitHistory
+
+    return totalCommitHistory
+
 def getLinesChangedInDestination(files, linesWithinNDays=90):
     destinationBranchChangeTable = {}
 
     for filename in files:
-        query = getFileCommitHistoryQuery(filename)
-        commitHistory = fetchFileCommitHistory(query)
+        commitHistory = getChangeHistoryForAllContributors(filename)
 
         destinationBranchChangeTable[filename] = []
         
@@ -180,6 +210,11 @@ def getLinesChangedInDestination(files, linesWithinNDays=90):
         
         if len(destinationBranchChangeTable[filename]) == 0:
             del destinationBranchChangeTable[filename]
+        else:
+            destinationBranchChangeTable[filename] = sorted(
+                destinationBranchChangeTable[filename],
+                key=lambda x: x[0]
+            )
     
     return destinationBranchChangeTable
 
