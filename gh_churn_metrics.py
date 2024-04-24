@@ -98,8 +98,6 @@ def fetchRepoContributors():
 
     for contributor in response.json():
         contributors.append(contributor['login'])
-
-    print(contributors)
         
     return contributors
     
@@ -293,7 +291,7 @@ def main():
             linesChangedInFile = getTotalLinesChanged(overlap)
             totalLinesChanged += linesChangedInFile
 
-    # print(totalLinesChanged)
+    print(totalLinesChanged)
 
 if __name__ == '__main__':
     main()
