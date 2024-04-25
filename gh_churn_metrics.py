@@ -99,6 +99,9 @@ def getValuesFromHunkHeader(hunkHeader):
     originalInfo = hunkParts[1][1:]
     newInfo = hunkParts[2][1:]
 
+    if ',' not in originalInfo or ',' not in newInfo:
+        return { 'error': 'likely new file...disregard' }
+
     originalStart, originalCount = map(int, originalInfo.split(','))
     newStart, newCount = map(int, newInfo.split(','))
 
@@ -117,6 +120,9 @@ def getLinesChangedInPatch(patch):
     for hunk in hunks:
         lines = hunk.split('\n')
         hunkValues = getValuesFromHunkHeader(lines[0])
+
+        if 'error' in hunkValues:
+            continue
 
         changeEncountered = False
         lineNum = startOfChange = hunkValues['-start']
