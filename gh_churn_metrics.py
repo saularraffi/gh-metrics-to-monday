@@ -86,11 +86,11 @@ def splitHunks(patch):
     pattern = r"(@@ [^@]+ @@)"
     splitResult = re.split(pattern, patch)
 
-    result = []
+    hunks = []
     for i in range(1, len(splitResult), 2):
-        result.append(splitResult[i] + splitResult[i + 1])
+        hunks.append(splitResult[i] + splitResult[i + 1])
     
-    return result
+    return hunks
 
 def getValuesFromHunkHeader(hunkHeader):
     hunkParts = hunkHeader.split()
@@ -147,7 +147,6 @@ def getLinesChangedInPr(prNumber):
 
     for file in prData['data']:
         patch = file.get("patch", "")
-        print(file['filename'])
         linesChanged = getLinesChangedInPatch(patch)
         diffTable[file['filename']] = linesChanged
     
@@ -253,7 +252,7 @@ def main():
             
             linesChangedInFile = getTotalLinesChanged(overlap)
             totalLinesChanged += linesChangedInFile
-
+    
     print(totalLinesChanged)
 
 if __name__ == '__main__':
