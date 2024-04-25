@@ -117,26 +117,23 @@ def getLinesChangedInPatch(patch):
         hunkValues = getValuesFromHunkHeader(lines[0])
 
         changeEncountered = False
-        start = offset = hunkValues['-start']
-        lastChangedLine = 0
-        linesToRollback = 0
+        lineNum = startOfChange = hunkValues['-start']
 
         for n, line in enumerate(lines[1:]):
-            lineNumber = offset + n
-
-            if line.startswith('+') and not changeEncountered:
-                linesToRollback += 1
-
-            if line.startswith('-') and not changeEncountered:
-                start = lineNumber - linesToRollback
-
             if line.startswith('-'):
+                if not changeEncountered:
+                    startOfChange = lineNum
                 changeEncountered = True
-            
-            if not line.startswith('-') and changeEncountered:
-                linesChanged.append((start, lineNumber - 1 - linesToRollback))
+                
+            elif line.startswith(' ') and changeEncountered:
+                linesChanged.append((startOfChange, lineNum - 1))
                 changeEncountered = False
-                linesToRollback = 0
+            
+            if not line.startswith('+'):
+                lineNum += 1
+        
+        if changeEncountered:
+            linesChanged.append((startOfChange, lineNum - 1))
 
     return linesChanged
 
@@ -150,6 +147,7 @@ def getLinesChangedInPr(prNumber):
 
     for file in prData['data']:
         patch = file.get("patch", "")
+        print(file['filename'])
         linesChanged = getLinesChangedInPatch(patch)
         diffTable[file['filename']] = linesChanged
     
