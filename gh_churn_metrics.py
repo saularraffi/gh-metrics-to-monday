@@ -8,6 +8,7 @@ import os
 
 parser = argparse.ArgumentParser()
 
+parser.add_argument('-t', '--churn-timeframe', default=90, help='Lines of code touched within t days are still candidates for churn')
 parser.add_argument('-gt', '--github-token', required=True, help='GitHub token used to call GitHub API')
 parser.add_argument('-pr', '--pr-number', required=True, help='PR number being evaluated for churn')
 parser.add_argument('-b', '--branch', default='main', help='Destination branch name (the branch being merged to)')
@@ -23,6 +24,7 @@ PR_NUMBER       = args.pr_number
 BRANCH          = args.branch
 OWNER           = args.owner
 REPO            = args.repo
+CHURN_TIMEFRAME = args.churn_timeframe
 
 def getFileCommitHistoryQuery(filename):
     global OWNER
@@ -158,7 +160,7 @@ def getDaysOld(dateStr):
     date = dateTimeObj.date()
     return (now - date).days
 
-def getLinesChangedInDestination(files, linesWithinNDays=90):
+def getLinesChangedInDestination(files, linesWithinNDays):
     destinationBranchChangeTable = {}
 
     for filename in files:
@@ -236,8 +238,8 @@ def getTotalLinesChanged(changedLines):
 def main():
     prChangeData = getLinesChangedInPr(PR_NUMBER)
 
-    filenames = [filename for filename in prChangeData]
-    destinationChangeData = getLinesChangedInDestination(filenames)
+    filesChanged = [filename for filename in prChangeData]
+    destinationChangeData = getLinesChangedInDestination(filesChanged, int(CHURN_TIMEFRAME))
 
     totalLinesChanged = 0
 
