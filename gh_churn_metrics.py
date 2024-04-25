@@ -8,6 +8,7 @@ import os
 
 parser = argparse.ArgumentParser()
 
+parser.add_argument('-t', '--churn-timeframe', default=90, help='Lines of code touched within t days are still candidates for churn')
 parser.add_argument('-gt', '--github-token', required=True, help='GitHub token used to call GitHub API')
 parser.add_argument('-pr', '--pr-number', required=True, help='PR number being evaluated for churn')
 parser.add_argument('-b', '--branch', default='main', help='Destination branch name (the branch being merged to)')
@@ -23,6 +24,7 @@ PR_NUMBER       = args.pr_number
 BRANCH          = args.branch
 OWNER           = args.owner
 REPO            = args.repo
+CHURN_TIMEFRAME = args.churn_timeframe
 
 def getFileCommitHistoryQuery(filename):
     global OWNER
@@ -86,16 +88,19 @@ def splitHunks(patch):
     pattern = r"(@@ [^@]+ @@)"
     splitResult = re.split(pattern, patch)
 
-    result = []
+    hunks = []
     for i in range(1, len(splitResult), 2):
-        result.append(splitResult[i] + splitResult[i + 1])
+        hunks.append(splitResult[i] + splitResult[i + 1])
     
-    return result
+    return hunks
 
 def getValuesFromHunkHeader(hunkHeader):
     hunkParts = hunkHeader.split()
     originalInfo = hunkParts[1][1:]
     newInfo = hunkParts[2][1:]
+
+    if ',' not in originalInfo or ',' not in newInfo:
+        return { 'error': 'likely new file...disregard' }
 
     originalStart, originalCount = map(int, originalInfo.split(','))
     newStart, newCount = map(int, newInfo.split(','))
@@ -116,27 +121,27 @@ def getLinesChangedInPatch(patch):
         lines = hunk.split('\n')
         hunkValues = getValuesFromHunkHeader(lines[0])
 
+        if 'error' in hunkValues:
+            continue
+
         changeEncountered = False
-        start = offset = hunkValues['-start']
-        lastChangedLine = 0
-        linesToRollback = 0
+        lineNum = startOfChange = hunkValues['-start']
 
         for n, line in enumerate(lines[1:]):
-            lineNumber = offset + n
-
-            if line.startswith('+') and not changeEncountered:
-                linesToRollback += 1
-
-            if line.startswith('-') and not changeEncountered:
-                start = lineNumber - linesToRollback
-
             if line.startswith('-'):
+                if not changeEncountered:
+                    startOfChange = lineNum
                 changeEncountered = True
-            
-            if not line.startswith('-') and changeEncountered:
-                linesChanged.append((start, lineNumber - 1 - linesToRollback))
+                
+            elif line.startswith(' ') and changeEncountered:
+                linesChanged.append((startOfChange, lineNum - 1))
                 changeEncountered = False
-                linesToRollback = 0
+            
+            if not line.startswith('+'):
+                lineNum += 1
+        
+        if changeEncountered:
+            linesChanged.append((startOfChange, lineNum - 1))
 
     return linesChanged
 
@@ -161,7 +166,7 @@ def getDaysOld(dateStr):
     date = dateTimeObj.date()
     return (now - date).days
 
-def getLinesChangedInDestination(files, linesWithinNDays=90):
+def getLinesChangedInDestination(files, linesWithinNDays):
     destinationBranchChangeTable = {}
 
     for filename in files:
@@ -239,8 +244,8 @@ def getTotalLinesChanged(changedLines):
 def main():
     prChangeData = getLinesChangedInPr(PR_NUMBER)
 
-    filenames = [filename for filename in prChangeData]
-    destinationChangeData = getLinesChangedInDestination(filenames)
+    filesChanged = [filename for filename in prChangeData]
+    destinationChangeData = getLinesChangedInDestination(filesChanged, int(CHURN_TIMEFRAME))
 
     totalLinesChanged = 0
 
@@ -255,7 +260,7 @@ def main():
             
             linesChangedInFile = getTotalLinesChanged(overlap)
             totalLinesChanged += linesChangedInFile
-
+    
     print(totalLinesChanged)
 
 if __name__ == '__main__':
